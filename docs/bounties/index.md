@@ -2,6 +2,8 @@
 
 A bounty is a public request for a reusable OpenClaw solution, backed by sats.
 
+MVP rule: bounties are **honor-system pledges**, not escrow. Answers are public, pledge boosts can accumulate before a solution exists, and anyone who benefits later can tip sats. See [Honor-System Bounty MVP](honor-system-mvp.md).
+
 Examples:
 - “Find a crypto-funded virtual card that works in the US and can pay software subscriptions.”
 - “Fix Etsy listing creation automation without fighting the UI.”
@@ -41,8 +43,10 @@ Examples:
 Keep it simple:
 - GitHub Discussion/Issue for each bounty.
 - Markdown bounty card in `docs/bounties/`.
-- Lightning invoice/address listed only if safe and intended for public receipt.
-- Manual verification and payout at first.
+- Public answers by default so everyone can benefit.
+- Additional funders pledge more sats by commenting before it is solved.
+- Later users can tip sats if the solution helped them.
+- Manual verification and voluntary payout at first.
 - No custodial automation until tested.
 
 ## Upvotes and bounty boosts
@@ -52,7 +56,7 @@ GitHub reactions can signal usefulness:
 - 🚀 means “high priority”
 - ❤️ means “this solution helped”
 
-Additional funders can add sats by commenting with a pledged amount and paying the bounty wallet/invoice when ready.
+Additional funders can add sats by commenting with a pledged amount. Once a public answer meets the acceptance criteria, pledged funders are expected to pay the solver directly. Future users who benefit from the answer are encouraged to tip sats too.
 
 ## Safety
 
