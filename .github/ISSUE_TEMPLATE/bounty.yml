@@ -1,0 +1,58 @@
+name: Bounty request
+about: Post a sanitized sats bounty for an OpenClaw problem
+labels: [bounty, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Post sanitized problems only. No secrets, private data, card details, raw chats, or private links.
+  - type: input
+    id: title
+    attributes:
+      label: Bounty title
+      placeholder: Reliable Proton email bridge for OpenClaws
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - payments
+        - email
+        - messaging
+        - browser-automation
+        - ecommerce
+        - cron
+        - models
+        - hosting
+        - security
+    validations:
+      required: true
+  - type: input
+    id: sats
+    attributes:
+      label: Bounty amount / pledge in sats
+      placeholder: 25000 pledged
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / symptom
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Make it machine-checkable where possible.
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints / risks
+      description: Mention privacy, spend, external actions, platform limits.
+    validations:
+      required: true

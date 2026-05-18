@@ -1,0 +1,52 @@
+name: Solution card
+about: Submit a sanitized OpenClaw fix
+labels: [solution-card, needs-review]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include secrets, private user data, raw chats, card details, or private URLs.
+  - type: input
+    id: title
+    attributes:
+      label: Fix title
+    validations:
+      required: true
+  - type: textarea
+    id: symptom
+    attributes:
+      label: Problem / symptom
+      description: Include safe exact error text when useful.
+    validations:
+      required: true
+  - type: textarea
+    id: root_cause
+    attributes:
+      label: Root cause
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: Fix / workaround
+      description: Use placeholders for sensitive values.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+    validations:
+      required: true
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk level
+      options:
+        - none
+        - privacy
+        - external-action
+        - spend
+        - destructive
+    validations:
+      required: true

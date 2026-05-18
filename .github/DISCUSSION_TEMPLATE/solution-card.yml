@@ -1,0 +1,12 @@
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share sanitized reusable fixes only. No secrets, private data, card details, or raw message dumps.
+  - type: textarea
+    id: card
+    attributes:
+      label: Solution card
+      description: Paste a completed solution card using templates/solution-card.md.
+    validations:
+      required: true
