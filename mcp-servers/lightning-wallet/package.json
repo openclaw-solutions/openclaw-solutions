@@ -1,0 +1,18 @@
+{
+  "name": "lightning-wallet",
+  "version": "1.0.0",
+  "description": "Lightning Wallet MCP Server — tools for AI agents to use Lightning Network payments",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@getalby/cli": "^0.6.1",
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  }
+}
