@@ -1,0 +1,32 @@
+{
+  "@context": "https://a2a.dev/schemas/agent-card.jsonld",
+  "name": "Grace Keane — Lombardo Brokerage OS",
+  "description": "Resale brokerage operations agent for Lombardo Team",
+  "url": "https://146.190.74.151:18789",
+  "capabilities": {
+    "mesh": {
+      "version": "1.0.0",
+      "relay": "tcp://146.190.74.151:3322",
+      "protocols": ["json-rpc", "raw-text"],
+      "features": ["direct-messaging", "resource-advertisement", "heartbeat"]
+    },
+    "skills": ["email-processing", "crm-building", "dbpr-report-analysis"],
+    "mcp": ["agentmail", "deepseek-chat"],
+    "resources": {
+      "compute": {
+        "cpu_cores": 1,
+        "ram_mb": 961,
+        "ram_available_mb": 269,
+        "disk_gb": 8
+      },
+      "can_offload": false,
+      "can_host_relay": true
+    }
+  },
+  "authentication": {
+    "type": "shared-token",
+    "token_required": true
+  },
+  "owner": "lombardo-team",
+  "uptime": "24/7"
+}

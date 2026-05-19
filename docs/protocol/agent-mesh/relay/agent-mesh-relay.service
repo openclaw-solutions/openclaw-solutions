@@ -1,0 +1,16 @@
+[Unit]
+Description=Agent Mesh Relay — Secure inter-agent messaging
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/agent-mesh/start-relay.sh
+Restart=always
+RestartSec=5
+User=root
+LimitNOFILE=1024
+CPUQuota=10%
+MemoryMax=50M
+
+[Install]
+WantedBy=multi-user.target
