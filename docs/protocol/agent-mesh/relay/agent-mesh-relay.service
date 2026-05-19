@@ -4,13 +4,18 @@ After=network.target
 
 [Service]
 Type=simple
+User=agent-mesh
+Group=agent-mesh
 ExecStart=/opt/agent-mesh/start-relay.sh
+WorkingDirectory=/opt/agent-mesh
 Restart=always
 RestartSec=5
-User=root
-LimitNOFILE=1024
-CPUQuota=10%
-MemoryMax=50M
+CPUQuota=20%
+MemoryMax=30M
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target
