@@ -96,7 +96,12 @@ async function enrichWithPublicApis(data) {
     if (ohlcResp.status === 'fulfilled' && ohlcResp.value.ok) {
       const ohlcRows = await ohlcResp.value.json();
       const candles = aggregateOhlcRows(ohlcRows, volumesByDay);
-      if (candles.length) data.candles = candles;
+      if (candles.length) {
+        data.candles = candles;
+        data.btc_price.high_24h = Math.max(...candles.map(c => c.high));
+        data.btc_price.low_24h = Math.min(...candles.map(c => c.low));
+        data.btc_price.range_label = '30D Range';
+      }
     }
 
     data.meta = data.meta || {};
@@ -190,7 +195,7 @@ function renderStatsBar(data) {
 
   const stats = [
     { label: 'BTC / USD', value: fmtPrice(p.current), change: `<span class="stat-change ${changeClass}">${changeIcon} ${fmtPct(p.change_24h_pct)}</span>` },
-    { label: '24h Range', value: fmtPrice(p.low_24h) + ' – ' + fmtPrice(p.high_24h), change: '' },
+    { label: p.range_label || '24h Range', value: fmtPrice(p.low_24h) + ' – ' + fmtPrice(p.high_24h), change: '' },
     { label: 'Market Cap', value: fmtPrice(p.market_cap), change: '' },
     { label: 'BTC Dominance', value: p.dominance.toFixed(1) + '%', change: '' },
   ];
