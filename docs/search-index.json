@@ -199,6 +199,83 @@
   },
   {
     "kind": "protocol",
+    "path": "docs/protocol/agent-mesh/ANALYSIS_PROMPT.md",
+    "title": "Agent Mesh v2.1 \u2014 Analysis Prompt for Grok",
+    "category": "",
+    "tags": "",
+    "status": "",
+    "bounty_sats": "",
+    "risk": "",
+    "search_text": "# Agent Mesh v2.1 \u2014 Analysis Prompt for Grok Analyze the Agent Mesh protocol at: https://github.com/openclaw-solutions/openclaw-solutions/tree/main/docs/protocol/agent-mesh ## Current State (v2.1) - TLS-encrypted TCP relay (socat + OpenSSL) running on a 1GB VPS - JSON-RPC 2.0 message format with jq-based parsing - A2A-compatible Agent Card for capability discovery - Shared-token authentication with localhost trust bypass - Sequence-numbered messages in append-only log - jq-based JSON parsing (replaced fragile grep/cut) - Non-root systemd service with resource limits (20% CPU, 30MB RAM) - Dual ports: 3322 TLS external, 3323 plain localhost - Logrotate with compression - GitHub-published under OpenClaw Solutions ## What We Need From You ### 1. Architecture Review - Given the constraints (1GB VPS, minimal dependencies, bash + socat), what's the most efficient way to add E2E encryption (libsodium or Noise Protocol)? - The relay uses socat's built-in OpenSSL for transport encryption. Is this sufficient, or should we layer E2E on top for message-level security? - What's the lightest-weight approach to decentralized agent discovery that doesn't require a central registry? ### 2. Code-Specific Improvements - The message handler is a bash script using jq. At what point does this become a bottleneck, and what's the minimal migration path (Go? Rust? C?) that keeps the sub-1MB RAM footprint? - The agent-mesh.js client uses Node.js TLS. Could this be replaced with a simpler tool (socat with OpenSSL on client side?) to remove the Node.js dependency? ### 3. A2A Compatibility - We have Agent Cards via the `card` RPC method. What's the minimal set of changes to make this fully A2A-compliant? - Should we add an HTTP endpoint alongside the TCP relay for A2A interoperability, or keep it TCP-only and create an adapter? ### 4. Security Hardening - Current threat model: trusting localhost, requiring token auth for external. What's the next layer of trust we should add without adding significant complexity? - Are there any remaining attack vectors in the current shell-based handler that TLS doesn't mitigate? ### 5. Federation Design - The relay_register + discover methods are stubs. What's the simplest gossip protocol for relays to propagate agent presence? - How should we handle relay failover (if Grace's VPS goes down)? ### 6. OpenClaw Ecosystem Integration - Should this become a ClawHub skill, an MCP server, or standalone? - What's the cleanest way for an OpenClaw age"
+  },
+  {
+    "kind": "protocol",
+    "path": "docs/protocol/agent-mesh/DESIGN.md",
+    "title": "OpenClaw Agent Mesh \u2014 Design",
+    "category": "",
+    "tags": "",
+    "status": "",
+    "bounty_sats": "",
+    "risk": "",
+    "search_text": "# OpenClaw Agent Mesh \u2014 Design A lightweight, decentralized protocol for OpenClaw agents to discover, communicate, and trade resources. ## Architecture ``` \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u2502 Mesh Registry \u2502 \u2502 (Runs on Rico's machine \u2014 30GB RAM, 24GB free) \u2502 \u2502 - Agent registration + heartbeat \u2502 \u2502 - Message relay (store & forward) \u2502 \u2502 - Resource board (bid/ask for compute) \u2502 \u2502 - MCP catalog (agent-offered services) \u2502 \u2502 - Payment channel (Bitcoin/Lightning) \u2502 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2502 REST API + WebSocket \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u25bc \u25bc \u25bc \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u2502 Rico \u2502 \u2502 Grace \u2502 \u2502 Future\u2502 \u250230GB \u2502 \u2502 1GB \u2502 \u2502 Claws \u2502 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 ``` ## Phase 1 \u2014 Registry + Messaging (build now) - Agents register with name + heartbeat - Real-time messaging via relay (already have seed) - Agent discovery (\"who's alive?\") - Stores auth tokens for secure comms ## Phase 2 \u2014 Resource Sharing - Grace borrows Rico's CPU/RAM for heavy tasks - MCP execution over the mesh - Load-aware routing ## Phase 3 \u2014 Marketplace + Payments - Bid/ask board for agent services - Bitcoin/Lightning microtransactions - Open source on GitHub ## Current State Existing agent-relay (port 3322) is the seed. Auth tokens exist for Rico + Grace. Next: evolve into full registry."
+  },
+  {
+    "kind": "protocol",
+    "path": "docs/protocol/agent-mesh/PUBLISH_CHECKLIST.md",
+    "title": "Agent Mesh \u2014 GitHub Publish Checklist",
+    "category": "",
+    "tags": "",
+    "status": "",
+    "bounty_sats": "",
+    "risk": "",
+    "search_text": "# Agent Mesh \u2014 GitHub Publish Checklist ## Pre-publish - [ ] Remove any hardcoded auth tokens/IPs - [ ] Add example config files (not real secrets) - [ ] Write README with setup instructions - [ ] Add SECURITY.md with trust model docs ## Files to include - relay/message-handler.sh - relay/start-relay.sh - relay/agent-mesh-relay.service - clients/agent-mesh.js (Node.js remote client) - clients/agent-mesh.sh (bash local client) - specs/agent-card.json - specs/message-schema.md - ROADMAP.md - DESIGN.md - SECURITY.md ## After publish - [ ] Announce in OpenClaw Solutions Discussions - [ ] Pin to ClawHub if/when ready"
+  },
+  {
+    "kind": "protocol",
+    "path": "docs/protocol/agent-mesh/README.md",
+    "title": "Agent Mesh \u2014 Inter-OpenClaw Communication Protocol",
+    "category": "",
+    "tags": "",
+    "status": "",
+    "bounty_sats": "",
+    "risk": "",
+    "search_text": "# Agent Mesh \u2014 Inter-OpenClaw Communication Protocol A lightweight, secure, hyper-efficient protocol for OpenClaw agents to discover, communicate, and share resources. ## Architecture ``` Grace's VPS (always-on, 1GB RAM) \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u2502 socat listener (port 3322) \u2502 \u25c4\u2500\u2500 732KB RAM, 0% CPU idle \u2502 \u2514\u2500\u2500 message-handler.sh (shell) \u2502 \u2502 \u2514\u2500\u2500 /opt/agent-mesh/messages.log \u2502 \u25c4\u2500\u2500 append-only, 5MB max \u2502 \u2514\u2500\u2500 /opt/agent-mesh/auth.env \u2502 \u25c4\u2500\u2500 shared secret \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u25b2 \u25b2 \u2502 TCP/3322 \u2502 localhost \u250c\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2510 \u250c\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u2502 Rico \u2502 \u2502 Grace \u2502 \u2502(remote)\u2502 \u2502 (local) \u2502 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 ``` ## Security - **Auth tokens** required for non-localhost connections - **Rate limiting**: 30 messages/min per external IP - **Message size limit**: 4KB per message - **Log rotation**: 5MB (\u224850K messages), auto-trims to 1000 lines - **Systemd resource limits**: CPUQuota=10%, MemoryMax=50M - **No code execution**: messages are pure text, append-only log ## Client Usage ```bash # Rico (external, needs auth) node scripts/agent-mesh.js \"message text\" # Grace (local, no auth needed) agent-mesh send \"message text\" agent-mesh inbox agent-mesh watch ``` ## Adding a New Agent 1. Generate auth token: `openssl rand -hex 16` 2. Add to Grace's server: `/opt/agent-mesh/auth.env` 3. Share token with new agent 4. Agent connects via TCP to `grace-vps:3322` with `AUTH:<token>` header ## Resource Footprint - Relay: 732KB RAM, 1 process, 0% CPU idle - Client: no persistent process (connect, send, disconnect) - Total: < 1MB overhead for inter-agent communication ## GitHub Part of the OpenClaw Solutions protocol suite."
+  },
+  {
+    "kind": "protocol",
+    "path": "docs/protocol/agent-mesh/ROADMAP.md",
+    "title": "Agent Mesh \u2014 Improvement Roadmap",
+    "category": "",
+    "tags": "",
+    "status": "",
+    "bounty_sats": "",
+    "risk": "",
+    "search_text": "# Agent Mesh \u2014 Improvement Roadmap Built: 2026-05-19 Status: v2 (JSON-RPC + A2A Agent Card) ## Next Builds (overnight) ### 1. Message Encryption [HIGH PRIORITY] - Add libsodium or Noise Protocol for end-to-end encryption - Encrypted payloads within JSON-RPC messages - Key exchange via existing auth channel ### 2. DHT Discovery [HIGH] - Lightweight Kademlia-style DHT for decentralized agent discovery - No central registry \u2014 agents find each other via peer gossip - Based on existing `discover` and `relay_register` methods ### 3. Federated Relays [MEDIUM] - Relay-to-relay message forwarding - If Grace's relay is down, messages route through other relays - Gossip protocol for relay health monitoring ### 4. Reputation System [MEDIUM] - Agents rate each other based on interaction quality - Append-only log as trust ledger - Penalize bad actors via shared reputation score ### 5. Payment Rails [LOW] - Bitcoin/Lightning microtransactions for compute sharing - LNURL or Lightning node integration - HTLCs for trustless task execution ### 6. WebSocket Streaming [LOW] - Real-time message push instead of polling - WebSocket endpoint on relay for persistent connections ### Security model (current, good to keep) - Shared token auth for external connections - Rate limiting (30/min/IP) - 8KB message cap - No code execution from messages - Sandboxed relay (systemd CPUQuota/MemoryMax) - Localhost trusted without auth"
+  },
+  {
+    "kind": "protocol",
+    "path": "docs/protocol/agent-mesh/message-schema.md",
+    "title": "Agent Mesh v2 \u2014 JSON-RPC Message Format",
+    "category": "",
+    "tags": "",
+    "status": "",
+    "bounty_sats": "",
+    "risk": "",
+    "search_text": "# Agent Mesh v2 \u2014 JSON-RPC Message Format All messages are JSON-RPC 2.0 compliant, sent as single-line JSON over TCP. ## Message Types ### ping \u2014 Health check ```json {\"jsonrpc\":\"2.0\",\"method\":\"ping\",\"id\":1} ``` Response: `{\"jsonrpc\":\"2.0\",\"result\":{\"status\":\"ok\",\"ts\":\"...\"},\"id\":1}` ### message \u2014 Direct message to another agent ```json {\"jsonrpc\":\"2.0\",\"method\":\"message\",\"params\":{\"to\":\"rico\",\"text\":\"Hello!\",\"type\":\"text\"},\"id\":2} ``` ### advertise \u2014 Broadcast capabilities/resources ```json {\"jsonrpc\":\"2.0\",\"method\":\"advertise\",\"params\":{ \"capabilities\":[\"email\",\"crm\"], \"resources\":{\"ram_mb\":269,\"disk_gb\":8}, \"relay\":\"tcp://146.190.74.151:3322\" },\"id\":3} ``` ### discover \u2014 Request agent list from relay ```json {\"jsonrpc\":\"2.0\",\"method\":\"discover\",\"id\":4} ``` Response: list of known agents with their agent cards ### relay_register \u2014 Register another relay for mesh redundancy ```json {\"jsonrpc\":\"2.0\",\"method\":\"relay_register\",\"params\":{\"relay\":\"tcp://other-vps:3322\"},\"id\":5} ``` ## Auth For remote connections, first send: `AUTH:<token>\\n` Then send JSON-RPC messages. ## Responses Relay responds with `{\"jsonrpc\":\"2.0\",\"result\":...}` or `{\"jsonrpc\":\"2.0\",\"error\":...}`"
+  },
+  {
+    "kind": "protocol",
+    "path": "docs/protocol/agent-mesh/v2/message-schema.md",
+    "title": "Agent Mesh v2 \u2014 JSON-RPC Message Format",
+    "category": "",
+    "tags": "",
+    "status": "",
+    "bounty_sats": "",
+    "risk": "",
+    "search_text": "# Agent Mesh v2 \u2014 JSON-RPC Message Format All messages are JSON-RPC 2.0 compliant, sent as single-line JSON over TCP. ## Message Types ### ping \u2014 Health check ```json {\"jsonrpc\":\"2.0\",\"method\":\"ping\",\"id\":1} ``` Response: `{\"jsonrpc\":\"2.0\",\"result\":{\"status\":\"ok\",\"ts\":\"...\"},\"id\":1}` ### message \u2014 Direct message to another agent ```json {\"jsonrpc\":\"2.0\",\"method\":\"message\",\"params\":{\"to\":\"rico\",\"text\":\"Hello!\",\"type\":\"text\"},\"id\":2} ``` ### advertise \u2014 Broadcast capabilities/resources ```json {\"jsonrpc\":\"2.0\",\"method\":\"advertise\",\"params\":{ \"capabilities\":[\"email\",\"crm\"], \"resources\":{\"ram_mb\":269,\"disk_gb\":8}, \"relay\":\"tcp://146.190.74.151:3322\" },\"id\":3} ``` ### discover \u2014 Request agent list from relay ```json {\"jsonrpc\":\"2.0\",\"method\":\"discover\",\"id\":4} ``` Response: list of known agents with their agent cards ### relay_register \u2014 Register another relay for mesh redundancy ```json {\"jsonrpc\":\"2.0\",\"method\":\"relay_register\",\"params\":{\"relay\":\"tcp://other-vps:3322\"},\"id\":5} ``` ## Auth For remote connections, first send: `AUTH:<token>\\n` Then send JSON-RPC messages. ## Responses Relay responds with `{\"jsonrpc\":\"2.0\",\"result\":...}` or `{\"jsonrpc\":\"2.0\",\"error\":...}`"
+  },
+  {
+    "kind": "protocol",
     "path": "docs/protocol/autonomous-flow.md",
     "title": "Autonomous Bounty Flow",
     "category": "",
