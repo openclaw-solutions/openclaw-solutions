@@ -32,14 +32,9 @@
       </div>
       <div class="header-right">
         <span class="badge">⚠️ Not Financial Advice</span>
-        <span class="badge">📡 Test Data</span>
+        <span class="badge">📡 Demo Data</span>
       </div>
     </header>
-
-    <!-- ═══ DISCLAIMER ═══ -->
-    <div class="disclaimer-box">
-      <strong>📚 Educational Dashboard.</strong> This tool is a learning and research aid for on-chain metrics, cycle frameworks, and macro context. All signals are educational indicators — not trade recommendations, buy/sell signals, or financial advice. On-chain data mixes node-verifiable metrics with vendor-derived estimates; sources are labeled per metric.
-    </div>
 
     <!-- ═══ STATS BAR ═══ -->
     <div class="stats-bar" id="stats-bar">
@@ -59,9 +54,12 @@
 
       <!-- ── TAB: CHARTS ── -->
       <section class="tab-panel active" id="tab-charts" role="tabpanel">
-        <div class="chart-section">
+        <div class="chart-section hero-chart glass-panel">
           <div class="chart-header">
-            <div class="chart-title">BTC / USD — Daily Candles (Test Data)</div>
+            <div>
+              <div class="eyebrow">Cycle Workbench · Hero View</div>
+              <div class="chart-title">BTC / USD — Daily Candles</div>
+            </div>
             <div class="chart-controls">
               <button class="chart-control-btn active">1D</button>
               <button class="chart-control-btn">1W</button>
@@ -87,6 +85,11 @@
               <div class="loading-state" style="padding:30px;"><div class="spinner"></div></div>
             </div>
           </div>
+        </div>
+
+        <!-- Education moves below the hero chart so the chart owns the first screen. -->
+        <div class="disclaimer-box education-below-chart">
+          <strong>📚 Educational Dashboard.</strong> This tool is a learning and research aid for on-chain metrics, cycle frameworks, and macro context. All signals are educational indicators — not trade recommendations, buy/sell signals, or financial advice. On-chain data mixes node-verifiable metrics with vendor-derived estimates; sources are labeled per metric.
         </div>
       </section>
 
