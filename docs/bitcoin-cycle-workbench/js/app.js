@@ -448,6 +448,8 @@ function renderMetrics(metrics) {
       desc: metrics.puell_multiple.description,
       source: metrics.puell_multiple.source,
       history: metrics.puell_multiple.history,
+      why: 'Miner revenue stress/greed gauge. Low values often appear near miner capitulation; high values can mark overheated miner revenue late in cycles.',
+      timeline: 'Sparkline: illustrative multi-month trend from the current sample set; production version will label exact start/end dates.',
     },
     {
       id: 'mvrv',
@@ -458,6 +460,8 @@ function renderMetrics(metrics) {
       desc: metrics.mvrv_z_score.description,
       source: metrics.mvrv_z_score.source,
       history: metrics.mvrv_z_score.history,
+      why: 'Compares market value to realized value. It helps identify whether aggregate holders are deeply underwater, fairly valued, or sitting on euphoric unrealized gains.',
+      timeline: 'Sparkline: illustrative multi-month trend from the current sample set; production version will label exact start/end dates.',
     },
     {
       id: 'realized',
@@ -468,6 +472,8 @@ function renderMetrics(metrics) {
       desc: metrics.realized_price.description,
       source: metrics.realized_price.source,
       history: metrics.realized_price.history,
+      why: 'Realized price approximates the market\'s aggregate on-chain cost basis. Spot price above it implies the average coin is in profit; below it often marks bear-market stress.',
+      timeline: 'Sparkline: illustrative realized-price trend; exact vendor/node computation will be labeled when live.',
     },
     {
       id: 'exchange',
@@ -478,6 +484,8 @@ function renderMetrics(metrics) {
       desc: metrics.exchange_reserve.description,
       source: metrics.exchange_reserve.source,
       history: metrics.exchange_reserve.history,
+      why: 'Exchange reserves estimate available sell-side inventory. Persistent declines can imply coins moving to custody/cold storage; spikes can warn of distribution risk.',
+      timeline: 'Sparkline: illustrative reserve trend; this is vendor/labeled data, not directly knowable from our node alone.',
     },
     {
       id: 'lth_sth',
@@ -488,6 +496,8 @@ function renderMetrics(metrics) {
       desc: metrics.lth_sth_ratio.description,
       source: metrics.lth_sth_ratio.source,
       history: metrics.lth_sth_ratio.history,
+      why: 'Long-term vs short-term holder balance shows who owns supply. Falling LTH share can mean distribution to new demand; extremes matter more than one-day moves.',
+      timeline: 'Sparkline: illustrative holder-rotation trend; vendor methodology must be cited in production.',
     },
     {
       id: 'pi_cycle',
@@ -499,6 +509,8 @@ function renderMetrics(metrics) {
       source: metrics.pi_cycle_top.source,
       ma111: metrics.pi_cycle_top.ma111_history,
       ma350: metrics.pi_cycle_top.ma350x2_history,
+      why: 'Pi Cycle compares fast and slow long-term moving averages. It has historically fired near cycle tops, but it is a heuristic — useful context, not prophecy.',
+      timeline: 'Sparkline: 111d MA vs 2×350d MA sample series; production should show full historical crosses.',
     },
   ];
 
@@ -519,6 +531,8 @@ function renderMetrics(metrics) {
         <div class="metric-value">${card.value}</div>
       </div>
       <div class="metric-desc">${card.desc}</div>
+      <div class="metric-context"><strong>Why you care:</strong> ${card.why}</div>
+      <div class="metric-timeline">${card.timeline}</div>
       <div class="metric-chart-mini" id="mini-chart-${card.id}"></div>
     `;
 

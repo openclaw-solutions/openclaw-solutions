@@ -875,3 +875,34 @@ a:hover { text-decoration: underline; }
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+
+/* ═══ Context Explainers ═══ */
+.chart-why {
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin: 0 0 12px;
+}
+
+.chart-why strong,
+.metric-context strong {
+  color: var(--text-primary);
+}
+
+.metric-context {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(148,163,184,0.12);
+  border-radius: var(--radius-md);
+  background: rgba(15, 23, 42, 0.42);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.metric-timeline {
+  margin-top: 8px;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}

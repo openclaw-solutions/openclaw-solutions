@@ -13,7 +13,7 @@
   <!-- TradingView Lightweight Charts (candlestick chart) -->
   <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js" defer></script>
 
-  <link rel="stylesheet" href="css/styles.css?v=8">
+  <link rel="stylesheet" href="css/styles.css?v=9">
 </head>
 <body>
 
@@ -74,13 +74,15 @@
         <!-- Sub-charts: line overlay + volume profile -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;" class="chart-sub-grid">
           <div class="chart-section">
-            <div class="chart-title" style="font-size:0.9rem;margin-bottom:12px;">📈 Price + 50d MA (Line Overlay)</div>
+            <div class="chart-title" style="font-size:0.9rem;margin-bottom:8px;">📈 Price + 14d MA (Line Overlay)</div>
+            <p class="chart-why"><strong>Why it matters:</strong> price vs. a 14-day average separates short-term momentum from daily noise. If price holds above the average, trend pressure is constructive; losing it says momentum is cooling.</p>
             <div style="height:200px;" id="mini-price-chart">
               <div class="loading-state" style="padding:30px;"><div class="spinner"></div></div>
             </div>
           </div>
           <div class="chart-section">
-            <div class="chart-title" style="font-size:0.9rem;margin-bottom:12px;">📊 Volume Profile</div>
+            <div class="chart-title" style="font-size:0.9rem;margin-bottom:8px;">📊 Volume Profile</div>
+            <p class="chart-why"><strong>Why it matters:</strong> volume shows conviction behind price moves. Rising price on weak volume is less trustworthy than rising price with broad participation.</p>
             <div style="height:200px;" id="mini-volume-chart">
               <div class="loading-state" style="padding:30px;"><div class="spinner"></div></div>
             </div>
@@ -184,6 +186,6 @@
   </div><!-- /app-container -->
 
   <!-- ═══ Scripts ═══ -->
-  <script src="js/app.js?v=8"></script>
+  <script src="js/app.js?v=9"></script>
 </body>
 </html>
