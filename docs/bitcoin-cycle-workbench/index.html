@@ -13,7 +13,7 @@
   <!-- TradingView Lightweight Charts (candlestick chart) -->
   <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js" defer></script>
 
-  <link rel="stylesheet" href="css/styles.css?v=7">
+  <link rel="stylesheet" href="css/styles.css?v=8">
 </head>
 <body>
 
@@ -61,9 +61,9 @@
               <div class="chart-title">BTC / USD — Daily Candles</div>
             </div>
             <div class="chart-controls">
-              <button class="chart-control-btn active">1D</button>
-              <button class="chart-control-btn">1W</button>
-              <button class="chart-control-btn">1M</button>
+              <button class="chart-control-btn active" data-range="all">1M</button>
+              <button class="chart-control-btn" data-range="7">1W</button>
+              <button class="chart-control-btn" data-range="1">Latest</button>
             </div>
           </div>
           <div class="chart-container" id="candle-chart">
@@ -88,8 +88,25 @@
         </div>
 
         <!-- Education moves below the hero chart so the chart owns the first screen. -->
+        <div class="education-grid education-below-chart">
+          <div class="education-card">
+            <div class="education-kicker">📚 Learning Note</div>
+            <h3>What Rico has learned from the video scout so far</h3>
+            <p>The first YouTube pass analyzed mostly AI automation/business videos, not the dedicated Bitcoin macro stack yet. The useful lesson: valuable tools sell when they explain decisions, show measurable ROI, and avoid pretending noisy signals are certainty.</p>
+          </div>
+          <div class="education-card">
+            <div class="education-kicker">🧭 Cycle Framework</div>
+            <h3>How this dashboard should think</h3>
+            <p>Separate price action, macro liquidity, node-verifiable on-chain facts, and vendor-derived metrics. The goal is cycle context — accumulation, neutral, overheated, risk-off — not day-trading calls.</p>
+          </div>
+          <div class="education-card">
+            <div class="education-kicker">🔬 Next Study Track</div>
+            <h3>Bitcoin PhD mode starts here</h3>
+            <p>Next research loop focuses on Checkmate/Checkonchain, Ben Cowen, What Bitcoin Did, Michael Howell, Ed Dowd, Neil Howe, and Buffett principles. Metrics to master: MVRV, SOPR, Puell, Pi Cycle, HODL waves, realized price, and fee pressure.</p>
+          </div>
+        </div>
         <div class="disclaimer-box education-below-chart">
-          <strong>📚 Educational Dashboard.</strong> This tool is a learning and research aid for on-chain metrics, cycle frameworks, and macro context. All signals are educational indicators — not trade recommendations, buy/sell signals, or financial advice. On-chain data mixes node-verifiable metrics with vendor-derived estimates; sources are labeled per metric.
+          <strong>Educational only.</strong> Signals are learning aids — not trade recommendations, buy/sell signals, or financial advice. On-chain data mixes node-verifiable metrics with vendor-derived estimates; sources are labeled per metric.
         </div>
       </section>
 
@@ -167,6 +184,6 @@
   </div><!-- /app-container -->
 
   <!-- ═══ Scripts ═══ -->
-  <script src="js/app.js?v=7"></script>
+  <script src="js/app.js?v=8"></script>
 </body>
 </html>

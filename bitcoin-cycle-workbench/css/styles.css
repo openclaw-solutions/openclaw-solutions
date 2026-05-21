@@ -838,3 +838,40 @@ a:hover { text-decoration: underline; }
     height: 300px;
   }
 }
+
+/* ═══ Education Cards Below Hero ═══ */
+.education-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin: 0 0 18px;
+}
+
+.education-card {
+  background: linear-gradient(180deg, rgba(26,31,46,0.74), rgba(13,18,29,0.62));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+}
+
+.education-card h3 {
+  font-size: 0.95rem;
+  line-height: 1.35;
+  margin: 4px 0 8px;
+}
+
+.education-card p {
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.education-kicker {
+  color: var(--btc-orange);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

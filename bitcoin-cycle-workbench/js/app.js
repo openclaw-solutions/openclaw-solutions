@@ -288,7 +288,7 @@ function renderCandleChart(candles) {
     color: c.close >= c.open ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)',
   })));
 
-  state.candleChart = { chart, candleSeries, volumeSeries };
+  state.candleChart = { chart, candleSeries, volumeSeries, candles };
 
   // Fit content
   chart.timeScale().fitContent();
@@ -693,6 +693,23 @@ function initChartControls() {
     btn.addEventListener('click', () => {
       btns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+
+      if (!state.candleChart?.chart || !state.candleChart?.candles?.length) return;
+      const range = btn.dataset.range || 'all';
+      const candles = state.candleChart.candles;
+
+      if (range === 'all') {
+        state.candleChart.chart.timeScale().fitContent();
+        return;
+      }
+
+      const count = Math.max(1, Number(range));
+      const slice = candles.slice(-count);
+      if (!slice.length) return;
+
+      const from = slice[0].time;
+      const to = slice[slice.length - 1].time;
+      state.candleChart.chart.timeScale().setVisibleRange({ from, to });
     });
   });
 }
