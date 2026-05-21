@@ -545,9 +545,6 @@ async function handleApi(pathname, query, res) {
         '/api/market/btc',
         '/api/chart/btc?days=30',
         '/api/onchain/summary',
-        '/api/onchain/mempool',
-        '/api/onchain/hashrate',
-        '/api/onchain/fee-pressure',
         '/api/workbench',
       ],
       educational_only: true,
@@ -566,7 +563,7 @@ async function handleApi(pathname, query, res) {
       status: 'ok',
       timestamp: new Date().toISOString(),
       cache: cacheStatus,
-      version: '1.0.0',
+      version: '1.1.0',
       educational_only: true,
       not_financial_advice: true,
     });
@@ -891,17 +888,20 @@ async function main() {
     BCW_PORT=3322   Server port (default 3322)
 
   ENDPOINTS:
-    GET /api/               API index
-    GET /api/health         Health check + cache status
-    GET /api/market/btc     Cached BTC price/market data
-    GET /api/chart/btc?days=30  Cached OHLC chart data
-    GET /api/onchain/summary    Mempool/node-friendly summary
-    GET /api/workbench      Combined object for frontend
+    GET /api/                     API index
+    GET /api/health               Health check + cache status
+    GET /api/market/btc           Cached BTC price/market data
+    GET /api/chart/btc?days=30    Cached OHLC chart data
+    GET /api/onchain/summary      Enriched on-chain: fees, mempool, hashrate, fee pressure
+    GET /api/onchain/mempool      Deep mempool detail + fee pressure
+    GET /api/onchain/hashrate     Mining hashrate + difficulty
+    GET /api/onchain/fee-pressure  Derived fee pressure metrics
+    GET /api/workbench            Combined object for frontend
 
   DATA SOURCES (no API key required):
     - CoinGecko: price, OHLC + volume chart data
     - CryptoCompare: OHLC + volume (fallback for chart)
-    - mempool.space: fees, block height, mempool stats
+    - mempool.space: fees, block height, mempool stats, hashrate, difficulty
     - DIA: price quote (fallback for price)
     - Fallback: data/test-data.json
 
