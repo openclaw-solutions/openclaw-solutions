@@ -1,0 +1,77 @@
+{
+  "schema_version": "0.1-preview",
+  "name": "Bitcoin Cycle Workbench Research MCP",
+  "display_name": "Bitcoin Cycle Workbench",
+  "description": "Machine-readable Bitcoin cycle research, on-chain context, macro/video insight summaries, and educational signal explanations for OpenClaw/MCP-capable agents. Not financial advice.",
+  "status": "preview",
+  "homepage": "http://cycle.lombardo.life/",
+  "publisher": {
+    "name": "OpenClaw Solutions",
+    "url": "https://github.com/openclaw-solutions/openclaw-solutions"
+  },
+  "mcp": {
+    "remote_server_status": "planned",
+    "planned_endpoint": "https://cycle.lombardo.life/mcp",
+    "transport": "streamable-http",
+    "capabilities_planned": [
+      "resources",
+      "tools",
+      "prompts"
+    ]
+  },
+  "resources_preview": [
+    {
+      "uri": "https://cycle.lombardo.life/data/test-data.json",
+      "name": "demo_workbench_data",
+      "mime_type": "application/json",
+      "description": "Current static/demo workbench data structure. Live public price/candle data is fetched client-side until backend deployment."
+    },
+    {
+      "uri": "https://cycle.lombardo.life/mcp/research-catalog.json",
+      "name": "research_catalog",
+      "mime_type": "application/json",
+      "description": "Catalog of available/planned research feeds, cycle metrics, and action-oriented insight products."
+    }
+  ],
+  "tools_planned": [
+    {
+      "name": "get_cycle_posture",
+      "description": "Return current educational cycle posture with source labels and uncertainty notes."
+    },
+    {
+      "name": "get_actionable_research_insights",
+      "description": "Return structured, source-linked insights extracted from Bitcoin/macro/on-chain videos and research notes."
+    },
+    {
+      "name": "compare_cycle_indicators",
+      "description": "Compare indicators such as MVRV, Puell, Pi Cycle, realized price, HODL waves, and fee pressure."
+    },
+    {
+      "name": "explain_metric_relevance",
+      "description": "Explain why a chart or metric matters, its limitations, and what timeframe it covers."
+    }
+  ],
+  "payments_planned": {
+    "models": ["x402", "lightning"],
+    "free_tier": "public demo, basic manifest, and limited educational samples",
+    "paid_tier_idea": "per-call micropayments for fresh actionable insight bundles, deeper transcript synthesis, and source-linked cycle reports",
+    "note": "Payment-gated endpoints are not active yet. No custody, no trade execution, no financial advice."
+  },
+  "safety": {
+    "not_financial_advice": true,
+    "no_trade_execution": true,
+    "intended_use": "research context, educational explanations, and agent-readable synthesis",
+    "disclaimer": "Agents should not treat this as investment advice. Outputs are research signals with uncertainty and source labels."
+  },
+  "tags": [
+    "mcp",
+    "openclaw",
+    "bitcoin",
+    "on-chain",
+    "macro",
+    "x402",
+    "lightning",
+    "agent-payments",
+    "cycle-analysis"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "Bitcoin Cycle Workbench Research Catalog",
+  "updated": "2026-05-21",
+  "status": "preview",
+  "feeds": [
+    {
+      "id": "cycle_posture",
+      "title": "Educational cycle posture",
+      "description": "Accumulation/Neutral/Overheated/Risk-Off style context with source labels and caveats.",
+      "availability": "public-preview"
+    },
+    {
+      "id": "metric_explainers",
+      "title": "Metric explainers",
+      "description": "Why each metric matters, timeline meaning, source quality, and failure modes.",
+      "availability": "public-preview"
+    },
+    {
+      "id": "youtube_research_insights",
+      "title": "Actionable video research insights",
+      "description": "Structured lessons extracted from Bitcoin/macro/on-chain video research. Current production focus is planned; first scout mostly covered AI automation/business lessons.",
+      "availability": "planned-paid-preview"
+    },
+    {
+      "id": "onchain_phd_track",
+      "title": "Bitcoin on-chain mastery track",
+      "description": "Checkmate/Checkonchain-style study path across MVRV, SOPR, Puell, realized price, HODL waves, fee pressure, miner dynamics, and cycle structure.",
+      "availability": "planned"
+    }
+  ],
+  "planned_sources": [
+    "Checkmate / Checkonchain",
+    "Benjamin Cowen",
+    "What Bitcoin Did / Peter McCormack",
+    "Michael Howell",
+    "Luke Gromen",
+    "Ed Dowd",
+    "Neil Howe",
+    "Warren Buffett principles"
+  ],
+  "disclaimer": "Research context only. Not financial advice, not trade execution, not individualized investment recommendation."
+}

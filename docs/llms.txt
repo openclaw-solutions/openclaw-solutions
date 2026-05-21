@@ -1,0 +1,25 @@
+# Bitcoin Cycle Workbench
+
+> Agent-readable Bitcoin cycle research dashboard with on-chain context, macro/video insight synthesis, and educational signal explanations. Not financial advice.
+
+Homepage: http://cycle.lombardo.life/
+MCP discovery manifest: http://cycle.lombardo.life/.well-known/mcp.json
+Research catalog: http://cycle.lombardo.life/mcp/research-catalog.json
+
+## What this site provides
+- Live public BTC price/candle context in the browser
+- Educational cycle posture framing: Accumulation / Neutral / Overheated / Risk-Off
+- Metric explainers for Puell Multiple, MVRV, realized price, exchange reserves, LTH/STH, Pi Cycle, volume, and moving averages
+- Planned MCP/x402/Lightning paid endpoints for structured actionable research insights from Bitcoin/macro/on-chain video processing
+
+## Intended agent use
+Use this as research context and source-labeled educational synthesis. Do not treat it as investment advice, trade execution, or individualized financial recommendation.
+
+## Planned MCP tools
+- get_cycle_posture
+- get_actionable_research_insights
+- compare_cycle_indicators
+- explain_metric_relevance
+
+## Payment model planned
+Free preview now. Future paid MCP/API calls may use x402 or Lightning micropayments for fresh insight bundles and deeper source-linked research synthesis.
