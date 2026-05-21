@@ -34,39 +34,110 @@ const fmtCompact = (v) => {
 const fmtPct = (v) => (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
 
 // ─── Data Loading ───
-// Try /api/workbench first (backend mode), fall back to test-data.json (static mode).
+// Try /api/workbench first (backend mode), then public no-key APIs in static mode,
+// and finally fall back to bundled demo data if public APIs fail/rate-limit.
 const IS_BACKEND = window.location.port === '3322' || window.location.hostname === 'localhost' && window.location.port !== '';
+
+function setDataBadge(label) {
+  const badges = document.querySelectorAll('.badge');
+  badges.forEach(b => {
+    if (b.textContent.includes('Demo') || b.textContent.includes('Live') || b.textContent.includes('Delayed')) {
+      b.textContent = label;
+    }
+  });
+}
+
+function aggregateOhlcRows(rows, volumesByDay = new Map()) {
+  const daily = new Map();
+  for (const row of rows || []) {
+    const [ts, open, high, low, close] = row;
+    const time = new Date(ts).toISOString().slice(0, 10);
+    const existing = daily.get(time);
+    if (!existing) daily.set(time, { time, open, high, low, close, volume: volumesByDay.get(time) || 0 });
+    else {
+      existing.high = Math.max(existing.high, high);
+      existing.low = Math.min(existing.low, low);
+      existing.close = close;
+      existing.volume = volumesByDay.get(time) || existing.volume || 0;
+    }
+  }
+  return [...daily.values()];
+}
+
+async function enrichWithPublicApis(data) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 6500);
+  try {
+    const [priceResp, ohlcResp, marketResp] = await Promise.allSettled([
+      fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true&include_market_cap=true', { signal: controller.signal }),
+      fetch('https://api.coingecko.com/api/v3/coins/bitcoin/ohlc?vs_currency=usd&days=30', { signal: controller.signal }),
+      fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30', { signal: controller.signal }),
+    ]);
+
+    if (priceResp.status === 'fulfilled' && priceResp.value.ok) {
+      const priceJson = await priceResp.value.json();
+      const btc = priceJson.bitcoin;
+      if (btc?.usd) {
+        data.btc_price.current = btc.usd;
+        data.btc_price.change_24h_pct = btc.usd_24h_change ?? data.btc_price.change_24h_pct;
+        data.btc_price.market_cap = btc.usd_market_cap ?? data.btc_price.market_cap;
+      }
+    }
+
+    let volumesByDay = new Map();
+    if (marketResp.status === 'fulfilled' && marketResp.value.ok) {
+      const marketJson = await marketResp.value.json();
+      for (const [ts, volume] of marketJson.total_volumes || []) {
+        const day = new Date(ts).toISOString().slice(0, 10);
+        volumesByDay.set(day, (volumesByDay.get(day) || 0) + volume);
+      }
+    }
+
+    if (ohlcResp.status === 'fulfilled' && ohlcResp.value.ok) {
+      const ohlcRows = await ohlcResp.value.json();
+      const candles = aggregateOhlcRows(ohlcRows, volumesByDay);
+      if (candles.length) data.candles = candles;
+    }
+
+    data.meta = data.meta || {};
+    data.meta.runtime_source = 'CoinGecko public API in browser; demo fallback if rate-limited';
+    document.body.dataset.dataMode = 'live-public';
+    setDataBadge('📡 Live Public Data');
+    return data;
+  } catch (_) {
+    document.body.dataset.dataMode = 'demo';
+    setDataBadge('📡 Demo Data');
+    return data;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 async function loadData() {
   let data = null;
 
-  // Try API first
+  // Try local backend first.
   try {
     const apiResp = await fetch('/api/workbench', { signal: AbortSignal.timeout(5000) });
     if (apiResp.ok) {
       data = await apiResp.json();
       if (data && data.btc_price) {
         document.body.dataset.dataMode = 'live';
-        // Update badge from "Demo Data" to "Live"
-        const badges = document.querySelectorAll('.badge');
-        badges.forEach(b => {
-          if (b.textContent.includes('Demo')) b.textContent = '📡 Live Data';
-        });
+        setDataBadge('📡 Live Data');
+        return data;
       }
     }
   } catch (_) {
-    // API unreachable, fall through
+    // API unreachable, fall through to static bundle + browser public APIs.
   }
 
-  // Fall back to static test-data.json
-  if (!data) {
-    const resp = await fetch('data/test-data.json');
-    if (!resp.ok) throw new Error(`Failed to load data: ${resp.status}`);
-    data = await resp.json();
-    document.body.dataset.dataMode = 'demo';
-  }
+  const resp = await fetch('data/test-data.json');
+  if (!resp.ok) throw new Error(`Failed to load data: ${resp.status}`);
+  data = await resp.json();
+  document.body.dataset.dataMode = 'demo';
+  setDataBadge('📡 Demo Data');
 
-  return data;
+  return enrichWithPublicApis(data);
 }
 
 // ─── Initialize ───
