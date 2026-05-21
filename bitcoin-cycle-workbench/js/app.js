@@ -34,10 +34,39 @@ const fmtCompact = (v) => {
 const fmtPct = (v) => (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
 
 // ─── Data Loading ───
+// Try /api/workbench first (backend mode), fall back to test-data.json (static mode).
+const IS_BACKEND = window.location.port === '3322' || window.location.hostname === 'localhost' && window.location.port !== '';
+
 async function loadData() {
-  const resp = await fetch('data/test-data.json');
-  if (!resp.ok) throw new Error(`Failed to load data: ${resp.status}`);
-  return resp.json();
+  let data = null;
+
+  // Try API first
+  try {
+    const apiResp = await fetch('/api/workbench', { signal: AbortSignal.timeout(5000) });
+    if (apiResp.ok) {
+      data = await apiResp.json();
+      if (data && data.btc_price) {
+        document.body.dataset.dataMode = 'live';
+        // Update badge from "Demo Data" to "Live"
+        const badges = document.querySelectorAll('.badge');
+        badges.forEach(b => {
+          if (b.textContent.includes('Demo')) b.textContent = '📡 Live Data';
+        });
+      }
+    }
+  } catch (_) {
+    // API unreachable, fall through
+  }
+
+  // Fall back to static test-data.json
+  if (!data) {
+    const resp = await fetch('data/test-data.json');
+    if (!resp.ok) throw new Error(`Failed to load data: ${resp.status}`);
+    data = await resp.json();
+    document.body.dataset.dataMode = 'demo';
+  }
+
+  return data;
 }
 
 // ─── Initialize ───

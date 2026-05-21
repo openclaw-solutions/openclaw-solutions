@@ -1,0 +1,92 @@
+# Bitcoin Cycle Workbench — Caddy reverse proxy snippet
+#
+# Include this in your main Caddyfile (or merge the route block).
+#
+# Setup:
+#   1. Generate a bcrypt password:
+#      caddy hash-password --plaintext 'your-strong-password'
+#   2. Uncomment and configure the basicauth block below.
+#   3. Add to your main Caddyfile or use `import /etc/caddy/conf.d/btc-cycle-workbench.conf`
+#
+# Note: The server runs on 127.0.0.1:3322 and serves both the static
+# frontend and the /api/* endpoints. If you need basicauth, uncomment
+# the whole basicauth block — keeping it commented prevents accidentally
+# deploying an unprotected public site.
+
+btc.lombardo.life {
+
+    # ─── Basic auth (uncomment before public exposure) ───
+    # Replace the hashed password below with your own:
+    #   caddy hash-password --plaintext 'choose-a-strong-password'
+    # basicauth {
+    #     # Username: "admin"   ← change to something unique
+    #     # Password: your chosen password (bcrypt-hashed below)
+    #     admin $2a$14$CHANGE.ME.REPLACE.WITH.YOUR.OWN.HASH
+    # }
+
+    # ─── Security headers ───
+    header {
+        # Prevent embedding in iframes (clickjacking)
+        X-Frame-Options "DENY"
+        # Enable XSS filter in older browsers
+        X-XSS-Protection "1; mode=block"
+        # MIME-sniffing protection
+        X-Content-Type-Options "nosniff"
+        # Referrer policy
+        Referrer-Policy "strict-origin-when-cross-origin"
+        # Disable all content-type sniffing
+        -Server
+    }
+
+    # ─── Static file serving (alternative: let the Node server handle this) ───
+    # If you prefer Caddy to serve static files directly and only use the
+    # Node server for /api/*, uncomment the lines below and adjust:
+    # root * /opt/openclaw/workspace/projects/bitcoin-cycle-workbench
+    # file_server
+    #
+    # For the full-stack approach, use reverse_proxy instead:
+
+    # ─── Proxy to Node backend ───
+    reverse_proxy 127.0.0.1:3322 {
+        # Health check pass-through
+        health_uri /api/health
+        health_interval 30s
+        health_timeout 5s
+
+        # Forward original Host header
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # ─── Rate limiting (optional, require caddy-rate-limits plugin) ───
+    # rate_limit {
+    #     zone api {
+    #         key {remote.host}
+    #         events 60
+    #         window 1m
+    #     }
+    #     zone static {
+    #         key {remote.host}
+    #         events 300
+    #         window 1m
+    #     }
+    # }
+    # @api path /api/*
+    # handle @api {
+    #     rate_limit zone api
+    #     reverse_proxy 127.0.0.1:3322
+    # }
+    # handle {
+    #     rate_limit zone static
+    #     root * /opt/openclaw/workspace/projects/bitcoin-cycle-workbench
+    #     file_server
+    # }
+
+    # ─── Logging (optional) ───
+    # log {
+    #     output file /var/log/caddy/btc-cycle-workbench.log
+    #     format json
+    # }
+}

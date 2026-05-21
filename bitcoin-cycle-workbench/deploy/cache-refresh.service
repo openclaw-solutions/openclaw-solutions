@@ -1,0 +1,42 @@
+# Bitcoin Cycle Workbench — Cache Refresh (oneshot)
+#
+# Standalone cache refresh, intended to be triggered by
+# cache-refresh.timer. Refreshes all cached API data from
+# public no-key endpoints (CoinGecko, mempool.space, DIA).
+#
+# Only needed if the server is NOT running (e.g. when proxying
+# static files separately via Caddy). If the server IS running,
+# it auto-refreshes its cache every 10 minutes in-process.
+#
+# Install:
+#   sudo cp deploy/cache-refresh.service  /etc/systemd/system/
+#   sudo cp deploy/cache-refresh.timer    /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now cache-refresh.timer
+
+[Unit]
+Description=Bitcoin Cycle Workbench — refresh API cache from public endpoints
+Documentation=https://github.com/AntonioLombardo/bitcoin-cycle-workbench
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+
+# System user matching the server service
+User=btc-cycle
+Group=btc-cycle
+
+WorkingDirectory=/opt/openclaw/workspace/projects/bitcoin-cycle-workbench
+
+ExecStart=/usr/bin/node /opt/openclaw/workspace/projects/bitcoin-cycle-workbench/scripts/refresh-cache.js
+
+# 30-second timeout for API fetches (has its own 8s per-call timeout)
+TimeoutStartSec=30
+
+# Sandboxing (lighter — this is a one-shot job, not long-running)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/openclaw/workspace/projects/bitcoin-cycle-workbench/data/cache
+ProtectHome=true

@@ -1,0 +1,37 @@
+# Bitcoin Cycle Workbench — Cache Refresh Timer
+#
+# Triggers cache-refresh.service every 10 minutes.
+# Only needed if the server is NOT running (standalone cache mode).
+# If the server IS running, it auto-refreshes in-process.
+#
+# Install:
+#   sudo cp deploy/cache-refresh.timer /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now cache-refresh.timer
+#
+# Verify:
+#   systemctl status cache-refresh.timer
+#   systemctl list-timers --all | grep cache-refresh
+
+[Unit]
+Description=Refresh Bitcoin Cycle Workbench cache every 10 minutes
+Documentation=https://github.com/AntonioLombardo/bitcoin-cycle-workbench
+After=network-online.target
+
+[Timer]
+# Run every 10 minutes on the clock (:00, :10, :20, ...)
+OnCalendar=*:0/10
+
+# Run missed refresh immediately after boot if timer was overdue
+Persistent=true
+
+# Ensure network is up before triggering
+OnBootSec=2min
+
+# Randomize slightly to avoid stampeding API endpoints
+RandomizedDelaySec=30
+
+Unit=cache-refresh.service
+
+[Install]
+WantedBy=timers.target

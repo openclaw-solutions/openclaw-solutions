@@ -1,0 +1,74 @@
+# Bitcoin Cycle Workbench — systemd service
+#
+# Serves the static frontend and cached API on port 3322 (default).
+# The server auto-refreshes its cache every 10 minutes in-process.
+#
+# Install:
+#   sudo cp deploy/btc-cycle-workbench.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now btc-cycle-workbench.service
+#
+# View:
+#   sudo journalctl -u btc-cycle-workbench -f
+#   curl -s http://127.0.0.1:3322/api/health | python3 -m json.tool
+
+[Unit]
+Description=Bitcoin Cycle Workbench — on-chain metrics dashboard and API
+Documentation=https://github.com/AntonioLombardo/bitcoin-cycle-workbench
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+# --- Runtime user ---
+# Create dedicated service user if one doesn't exist:
+#   sudo useradd -r -s /usr/sbin/nologin -m -d /var/lib/btc-cycle btc-cycle
+User=btc-cycle
+Group=btc-cycle
+
+WorkingDirectory=/opt/openclaw/workspace/projects/bitcoin-cycle-workbench
+
+ExecStart=/usr/bin/node server/index.js
+
+# --- Environment ---
+Environment=BCW_PORT=3322
+Environment=NODE_ENV=production
+
+Restart=on-failure
+RestartSec=10
+
+# --- Hardening ---
+# Restrict filesystem access to the project directory
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/openclaw/workspace/projects/bitcoin-cycle-workbench/data/cache
+
+# Deny all network access except AF_INET / AF_INET6 / AF_UNIX
+PrivateNetwork=false
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+# Sandboxing
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+MemoryDenyWriteExecute=true
+LockPersonality=true
+RestrictRealtime=true
+SystemCallArchitectures=native
+
+# Process isolation
+CapabilityBoundingSet=~CAP_NET_BIND_SERVICE
+AmbientCapabilities=
+RemoveIPC=true
+
+# Memory limits only (CPUAccounting= deprecated by systemd 256+)
+MemoryAccounting=yes
+MemoryMax=512M
+TasksMax=32
+
+[Install]
+WantedBy=multi-user.target
